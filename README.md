@@ -1,1 +1,3 @@
-# fastagram-backend
+# Fastagram Backend
+
+Fullstack instagram clone
