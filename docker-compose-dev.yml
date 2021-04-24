@@ -1,12 +1,12 @@
 version: '3'
 services:
-  api:
-    container_name: api
+  api-fastagram:
+    container_name: api-fastagram
     read_only: true
     build:
       context: .
       dockerfile: ./Dockerfile.dev
-    image: api:1.0
+    image: api-fastagram:1.0
     ports:
       - 4000:4000
     restart: always
@@ -23,7 +23,7 @@ services:
     env_file:
       - ./.env
     volumes:
-      - pg-vol:/data/db
+      - pg-vol:/data/postgresdb
     ports:
       - 5432:5432
 volumes:

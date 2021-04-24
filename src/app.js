@@ -14,7 +14,7 @@ app.use(express.json());
 // Routes
 app.use('/auth', authRoutes);
 app.get('/', (req, res) => {
-  res.json({ message: 'hello from express' });
+  res.json({ message: 'hello from express!' });
 });
 
 // Unhandled Endpoint
