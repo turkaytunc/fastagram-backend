@@ -9,7 +9,10 @@
     "test:dev": "jest --watchAll --coverage",
     "lint": "eslint . --ext .js",
     "start": "node server.js",
-    "dev": "nodemon server.js"
+    "dev": "nodemon -L server.js",
+    "compose:dev:up": "docker-compose -f docker-compose-dev.yml up",
+    "compose:dev:test": "docker-compose -f docker-compose-dev.yml up postgresdb",
+    "compose:dev:down": "docker-compose -f docker-compose-dev.yml down -v"
   },
   "keywords": [
     "instagram",
@@ -29,6 +32,7 @@
     "prettier": "^2.2.1"
   },
   "dependencies": {
+    "bcrypt": "^5.0.1",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
