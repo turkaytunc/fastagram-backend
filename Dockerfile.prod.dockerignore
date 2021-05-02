@@ -19,7 +19,6 @@
 **/obj
 **/secrets.dev.yaml
 **/values.dev.yaml
-**/.env
 **/coverage
 **/__tests__
 README.md

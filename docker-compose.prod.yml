@@ -1,0 +1,26 @@
+version: '3'
+services:
+  api-fastagram:
+    container_name: api-fastagram
+    build:
+      context: .
+      dockerfile: ./Dockerfile.prod
+    image: api-fastagram:1.0
+    ports:
+      - 4000:4000
+    restart: always
+    env_file:
+      - ./.env
+    depends_on:
+      - postgresdb
+
+  postgresdb:
+    image: postgres:13.2
+    env_file:
+      - ./.env
+    volumes:
+      - pg-vol:/data/postgresdb
+    ports:
+      - 5432:5432
+volumes:
+  pg-vol:
