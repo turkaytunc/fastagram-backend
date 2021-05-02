@@ -1,0 +1,14 @@
+FROM mhart/alpine-node:15.12.0 AS builder
+WORKDIR /api
+COPY ["./package.json", "./"]
+RUN npm install
+COPY . .
+CMD [ "npm", "run", "build" ]
+
+FROM mhart/alpine-node:15.12.0
+WORKDIR /usr/app/fastagram-backend
+COPY --from=builder /api/ /usr/app/fastagram-backend/
+COPY --from=builder /api/prod-config/package.json /usr/app/fastagram-backend/ 
+RUN npm install --only=production
+RUN npm uninstall typescript
+CMD ["node","./dist/server.js"]

@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 
-import app from './src/app.js';
+import app from './src/app';
 
 const { PORT = 4000 } = process.env;
 
