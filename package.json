@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "",
   "main": "./dist/server.js",
-  "type": "module",
   "scripts": {
     "test": "jest",
     "test:dev": "jest --watchAll --coverage",
@@ -16,6 +15,10 @@
     "compose:dev:down": "docker-compose -f docker-compose-dev.yml down -v",
     "compose:prod:up": "docker-compose -f docker-compose.prod.yml up -d --build",
     "compose:prod:down": "docker-compose -f docker-compose.prod.yml down"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com:turkaytunc/fastagram-backend.git"
   },
   "keywords": [
     "instagram",
@@ -35,7 +38,9 @@
     "@types/jsonwebtoken": "^8.5.1",
     "@types/morgan": "^1.9.2",
     "@types/supertest": "^2.0.11",
-    "eslint": "^7.24.0",
+    "@typescript-eslint/eslint-plugin": "^4.22.0",
+    "@typescript-eslint/parser": "^4.22.0",
+    "eslint": "^7.25.0",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-config-prettier": "^8.2.0",
     "eslint-plugin-import": "^2.22.1",
