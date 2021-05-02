@@ -3,8 +3,6 @@ import { authControllers } from '../../controllers';
 
 const auth = express.Router();
 
-auth.get('/', (req, res, next) => {
-  res.json({ message: 'hello from auth' });
-});
+auth.get('/', authControllers.loginController);
 
 export default auth;
