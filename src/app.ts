@@ -3,10 +3,12 @@ import morgan from 'morgan';
 import cors from 'cors';
 import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
-import { authRoutes } from './routes';
-import ErrorWithStatusCode from './utils/ErrorWithStatusCode';
+import { HttpError } from './utils/HttpError';
+import { authRoutes, dashboardRoutes } from './routes';
+import { initializeDB } from './db/initializeDB';
 
 const app = express();
+let isInit = false;
 
 app.use(cookieParser());
 app.use(express.json());
@@ -21,14 +23,20 @@ app.use(helmet());
 app.use(morgan('dev'));
 
 app.use('/auth', authRoutes);
+app.use('/dashboard', dashboardRoutes);
 
-app.get('/', (req: any, res: { json: (arg0: { message: string }) => void }) => {
-  res.json({ message: 'hello from express!!' });
+app.get('/', async (req: any, res: { json: (arg0: { message: string }) => void }) => {
+  if (isInit === false) {
+    await initializeDB();
+    isInit = true;
+    return res.json({ message: 'Initial configuration completed successfully!' });
+  }
+  return res.json({ message: 'Hello from express!' });
 });
 
 // Unhandled Endpoint Error
 app.get('/*', (req: any, res: any, next: any) => {
-  const error = new ErrorWithStatusCode('Page Not Found', 404);
+  const error = new HttpError('Page Not Found', 404);
   return next(error);
 });
 

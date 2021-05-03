@@ -1,1 +1,2 @@
-export * as authControllers from './auth/authControllers';
+export * as authControllers from './authControllers';
+export * as dashboardControllers from './dashboardControllers';
