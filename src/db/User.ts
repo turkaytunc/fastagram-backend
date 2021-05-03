@@ -1,20 +1,22 @@
 import pool from './pool';
 
-export const createUser = async (name: string) => {
+export const createUser = async (name: string, email: string, password: string) => {
   try {
-    await pool.query(`CREATE TABLE users(id SERIAL PRIMARY KEY,
-    name VARCHAR(70))`);
-    await pool.query('INSERT INTO users(name) values($1)', [name]);
+    return await pool.query('INSERT INTO users(name,email,password) values($1, $2, $3)', [
+      name,
+      email,
+      password,
+    ]);
   } catch (error) {
-    console.log(error);
+    return error;
   }
 };
 
-export const getUser = async (name: string) => {
+export const findUser = async (userId: string) => {
   try {
-    const query = await pool.query(`Select * from users where users.name = $1`, [name]);
+    const query = await pool.query(`Select * from users where users.user_id = $1`, [userId]);
     return query.rows[0];
   } catch (error) {
-    return {};
+    return error;
   }
 };
