@@ -37,15 +37,24 @@ export const login = async (req: any, res: any, next: (arg0: any) => any) => {
 
 export const register = async (
   req: { body: { name: any; email: any; password: any } },
-  res: { json: (arg0: { user: any }) => any },
+  res: any,
   next: (arg0: any) => any
 ) => {
   try {
     const { name, email, password } = req.body;
 
-    const user = await createUser(name, email, password);
+    const hashedPassword = await bcrypt.hash(password, 12);
 
-    return res.json({ user: user.rows[0] });
+    const user = await createUser(name, email, hashedPassword);
+
+    const token = generateToken(email);
+    res.cookie('auth', token, {
+      maxAge: TEN_MINUTE,
+      httpOnly: true,
+      secure: true,
+      samesite: 'lax',
+    });
+    return res.status(200).json({ message: 'login successful' });
   } catch (error) {
     return next(error);
   }
