@@ -4,7 +4,7 @@ import cors from 'cors';
 import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
 import { authRoutes } from './routes';
-import ErrorWithStatusCode from './utils/ErrorWithStatusCode';
+import HttpError from './utils/HttpError';
 import { initializeDB } from './db/initializeDB';
 
 const app = express();
@@ -35,7 +35,7 @@ app.get('/', async (req: any, res: { json: (arg0: { message: string }) => void }
 
 // Unhandled Endpoint Error
 app.get('/*', (req: any, res: any, next: any) => {
-  const error = new ErrorWithStatusCode('Page Not Found', 404);
+  const error = new HttpError('Page Not Found', 404);
   return next(error);
 });
 

@@ -6,9 +6,18 @@ import { createUser, findUser } from '../../db/User';
 dotenv.config();
 
 export const login = async (req: any, res: any, next: (arg0: any) => any) => {
-  const user = await findUser('mahmut');
+  try {
+    const user = await findUser('ee42dffd-2d53-496f-be74-1c18a4ab2df1');
 
-  res.json({ user });
+    const isUserExist = user?.rows?.length !== undefined || user?.rows?.length > 0;
+    if (isUserExist) {
+      return res.json({ user: user.rows[0] });
+    }
+
+    return res.json({ message: 'User not found' });
+  } catch (error) {
+    return next(error);
+  }
 };
 
 export const register = async (
