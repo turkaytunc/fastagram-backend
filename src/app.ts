@@ -5,8 +5,10 @@ import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
 import { authRoutes } from './routes';
 import ErrorWithStatusCode from './utils/ErrorWithStatusCode';
+import { initializeDB } from './db/initializeDB';
 
 const app = express();
+let isInit = false;
 
 app.use(cookieParser());
 app.use(express.json());
@@ -22,8 +24,13 @@ app.use(morgan('dev'));
 
 app.use('/auth', authRoutes);
 
-app.get('/', (req: any, res: { json: (arg0: { message: string }) => void }) => {
-  res.json({ message: 'hello from express!!' });
+app.get('/', async (req: any, res: { json: (arg0: { message: string }) => void }) => {
+  if (isInit === false) {
+    await initializeDB();
+    isInit = true;
+    return res.json({ message: 'Initial configuration completed successfully!' });
+  }
+  return res.json({ message: 'Hello from express!' });
 });
 
 // Unhandled Endpoint Error

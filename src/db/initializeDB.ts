@@ -1,6 +1,7 @@
 import pool from './pool';
 
 export const initializeDB = async () => {
+  await pool.query(`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`);
   await pool.query(`
   CREATE TABLE IF NOT EXISTS users (
     id SERIAL PRIMARY KEY,
