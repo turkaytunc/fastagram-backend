@@ -13,7 +13,7 @@
     "compose:dev:up": "docker-compose -f docker-compose.dev.yml up",
     "compose:dev:test": "docker-compose -f docker-compose.dev.yml up postgresdb",
     "compose:dev:down": "docker-compose -f docker-compose.dev.yml down -v",
-    "compose:prod:up": "docker-compose -f docker-compose.prod.yml up --force-recreate -d",
+    "compose:prod:up": "docker-compose -f docker-compose.prod.yml up --build --force-recreate -d",
     "compose:prod:down": "docker-compose -f docker-compose.prod.yml down"
   },
   "repository": {

@@ -1,20 +1,35 @@
 import dotenv from 'dotenv';
-import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
-import { createUser, findUser } from '../../db/User';
+
+import { generateToken, HttpError } from '../../utils';
+import { createUser, findUserById, findUserByEmail } from '../../db/User';
 
 dotenv.config();
+const TEN_MINUTE = 1000 * 60 * 10;
+const secret = process.env.JWT_SECRET!;
 
 export const login = async (req: any, res: any, next: (arg0: any) => any) => {
   try {
-    const user = await findUser('ee42dffd-2d53-496f-be74-1c18a4ab2df1');
+    const { email, password } = req.body;
+    const user = await findUserByEmail(email);
 
     const isUserExist = user?.rows?.length !== undefined || user?.rows?.length > 0;
-    if (isUserExist) {
-      return res.json({ user: user.rows[0] });
+    if (!isUserExist) {
+      throw new HttpError('User not exists!', 404);
+    }
+    const isPasswordValid = await bcrypt.compare(password, user.rows[0].password);
+    if (isPasswordValid) {
+      const token = generateToken(email);
+      res.cookie('auth', token, {
+        maxAge: TEN_MINUTE,
+        httpOnly: true,
+        secure: true,
+        samesite: 'lax',
+      });
+      return res.status(200).json({ message: 'login successful' });
     }
 
-    return res.json({ message: 'User not found' });
+    throw new HttpError('Wrong email or password!', 403);
   } catch (error) {
     return next(error);
   }

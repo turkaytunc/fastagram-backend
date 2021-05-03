@@ -11,11 +11,19 @@ export const createUser = async (name: string, email: string, password: string) 
   }
 };
 
-export const findUser = async (userId: string) => {
+export const findUserById = async (userId: string) => {
   try {
     return await pool.query(`Select user_id, name, email from users where users.user_id = $1`, [
       userId,
     ]);
+  } catch (error) {
+    return error;
+  }
+};
+
+export const findUserByEmail = async (email: string) => {
+  try {
+    return await pool.query(`Select * from users where users.email = $1`, [email]);
   } catch (error) {
     return error;
   }

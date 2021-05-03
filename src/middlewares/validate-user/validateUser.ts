@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
-import HttpError from '../../utils/HttpError';
+import { HttpError } from '../../utils';
 
 dotenv.config();
 

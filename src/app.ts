@@ -3,8 +3,8 @@ import morgan from 'morgan';
 import cors from 'cors';
 import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
+import { HttpError } from './utils/HttpError';
 import { authRoutes } from './routes';
-import HttpError from './utils/HttpError';
 import { initializeDB } from './db/initializeDB';
 
 const app = express();
