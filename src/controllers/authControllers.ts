@@ -1,8 +1,8 @@
 import dotenv from 'dotenv';
 import bcrypt from 'bcrypt';
 
-import { generateToken, HttpError } from '../../utils';
-import { createUser, findUserById, findUserByEmail } from '../../db/User';
+import { generateToken, HttpError } from '../utils';
+import { createUser, findUserByEmail } from '../db/User';
 
 dotenv.config();
 const TEN_MINUTE = 1000 * 60 * 10;
@@ -10,6 +10,7 @@ const secret = process.env.JWT_SECRET!;
 
 export const login = async (req: any, res: any, next: (arg0: any) => any) => {
   try {
+    console.log(req.cookies);
     const { email, password } = req.body;
     const user = await findUserByEmail(email);
 

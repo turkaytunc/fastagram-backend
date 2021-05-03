@@ -1,1 +1,2 @@
-export { default as authRoutes } from './auth/auth';
+export { default as authRoutes } from './auth';
+export { default as dashboardRoutes } from './dashboard';

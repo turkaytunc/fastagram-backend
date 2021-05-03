@@ -4,7 +4,7 @@ import cors from 'cors';
 import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
 import { HttpError } from './utils/HttpError';
-import { authRoutes } from './routes';
+import { authRoutes, dashboardRoutes } from './routes';
 import { initializeDB } from './db/initializeDB';
 
 const app = express();
@@ -23,6 +23,7 @@ app.use(helmet());
 app.use(morgan('dev'));
 
 app.use('/auth', authRoutes);
+app.use('/dashboard', dashboardRoutes);
 
 app.get('/', async (req: any, res: { json: (arg0: { message: string }) => void }) => {
   if (isInit === false) {
