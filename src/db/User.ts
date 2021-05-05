@@ -7,7 +7,7 @@ export const createUser = async (name: string, email: string, password: string) 
       [name, email, password]
     );
   } catch (error) {
-    return error;
+    return { rows: [] };
   }
 };
 
@@ -17,7 +17,7 @@ export const findUserById = async (userId: string) => {
       userId,
     ]);
   } catch (error) {
-    return error;
+    return { rows: [] };
   }
 };
 
@@ -25,6 +25,6 @@ export const findUserByEmail = async (email: string) => {
   try {
     return await pool.query(`Select * from users where users.email = $1`, [email]);
   } catch (error) {
-    return error;
+    return { rows: [] };
   }
 };
