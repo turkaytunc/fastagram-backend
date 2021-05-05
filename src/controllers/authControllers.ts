@@ -10,7 +10,6 @@ const secret = process.env.JWT_SECRET!;
 
 export const login = async (req: any, res: any, next: (arg0: any) => any) => {
   try {
-    console.log(req.cookies);
     const { email, password } = req.body;
     const user = await findUserByEmail(email);
 
@@ -27,7 +26,15 @@ export const login = async (req: any, res: any, next: (arg0: any) => any) => {
         secure: true,
         samesite: 'lax',
       });
-      return res.status(200).json({ message: 'login successful' });
+      return res
+        .status(200)
+        .json({
+          user: {
+            name: user.rows[0].name,
+            userId: user.rows[0].user_id,
+            email: user.rows[0].email,
+          },
+        });
     }
 
     throw new HttpError('Wrong email or password!', 403);
@@ -55,7 +62,26 @@ export const register = async (
       secure: true,
       samesite: 'lax',
     });
-    return res.status(200).json({ message: 'login successful' });
+    return res.status(201).json({ user });
+  } catch (error) {
+    return next(error);
+  }
+};
+
+export const logout = async (req: any, res: any, next: any) => {
+  try {
+    const { auth } = req.cookies;
+
+    if (auth) {
+      res.cookie('auth', ' ', {
+        maxAge: 1,
+        httpOnly: true,
+        secure: true,
+        samesite: 'Lax',
+      });
+      return res.status(200).json({ message: 'Logout Successful.' });
+    }
+    throw new HttpError('Oops something went wrong', 500);
   } catch (error) {
     return next(error);
   }
