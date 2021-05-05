@@ -6,14 +6,13 @@ import { createUser, findUserByEmail } from '../db/User';
 
 dotenv.config();
 const TEN_MINUTE = 1000 * 60 * 10;
-const secret = process.env.JWT_SECRET!;
 
 export const login = async (req: any, res: any, next: (arg0: any) => any) => {
   try {
     const { email, password } = req.body;
     const user = await findUserByEmail(email);
 
-    const isUserExist = user?.rows?.length !== undefined || user?.rows?.length > 0;
+    const isUserExist = user?.rows?.length !== undefined && user?.rows?.length > 0;
     if (!isUserExist) {
       throw new HttpError('User not exists!', 404);
     }
@@ -26,15 +25,13 @@ export const login = async (req: any, res: any, next: (arg0: any) => any) => {
         secure: true,
         samesite: 'lax',
       });
-      return res
-        .status(200)
-        .json({
-          user: {
-            name: user.rows[0].name,
-            userId: user.rows[0].user_id,
-            email: user.rows[0].email,
-          },
-        });
+      return res.status(200).json({
+        user: {
+          name: user.rows[0].name,
+          userId: user.rows[0].user_id,
+          email: user.rows[0].email,
+        },
+      });
     }
 
     throw new HttpError('Wrong email or password!', 403);
@@ -62,7 +59,13 @@ export const register = async (
       secure: true,
       samesite: 'lax',
     });
-    return res.status(201).json({ user });
+    return res.status(201).json({
+      user: {
+        name: user.rows[0].name,
+        userId: user.rows[0].user_id,
+        email: user.rows[0].email,
+      },
+    });
   } catch (error) {
     return next(error);
   }
