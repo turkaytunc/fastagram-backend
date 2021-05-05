@@ -6,7 +6,8 @@ export const dashboard = async (req: any, res: any, next: (arg0: any) => any) =>
     const user = await findUserByEmail(req?.user?.email);
 
     if (user.rows[0]) {
-      return res.json({ user: { name: user.rows[0].name, email: user.rows[0].email } });
+      const { name, email, user_id: userId } = user.rows[0];
+      return res.json({ user: { name, email, userId } });
     }
 
     throw new HttpError('User not found', 404);
