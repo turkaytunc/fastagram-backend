@@ -1,5 +1,6 @@
 import dotenv from 'dotenv';
 import bcrypt from 'bcrypt';
+import { RequestHandler } from 'express';
 
 import { generateToken, HttpError } from '../utils';
 import { createUser, findUserByEmail } from '../db/User';
@@ -7,7 +8,7 @@ import { createUser, findUserByEmail } from '../db/User';
 dotenv.config();
 const TEN_MINUTE = 1000 * 60 * 10;
 
-export const login = async (req: any, res: any, next: (arg0: any) => any) => {
+export const login: RequestHandler = async (req, res, next) => {
   try {
     const { email, password } = req.body;
     const user = await findUserByEmail(email);
@@ -23,7 +24,7 @@ export const login = async (req: any, res: any, next: (arg0: any) => any) => {
         maxAge: TEN_MINUTE,
         httpOnly: true,
         secure: true,
-        samesite: 'lax',
+        sameSite: 'lax',
       });
       return res.status(200).json({
         user: {
@@ -40,11 +41,7 @@ export const login = async (req: any, res: any, next: (arg0: any) => any) => {
   }
 };
 
-export const register = async (
-  req: { body: { username: any; email: any; password: any } },
-  res: any,
-  next: (arg0: any) => any
-) => {
+export const register: RequestHandler = async (req, res, next) => {
   try {
     const { username, email, password } = req.body;
 
@@ -57,7 +54,7 @@ export const register = async (
       maxAge: TEN_MINUTE,
       httpOnly: true,
       secure: true,
-      samesite: 'lax',
+      sameSite: 'lax',
     });
     return res.status(201).json({
       user: {
@@ -71,7 +68,7 @@ export const register = async (
   }
 };
 
-export const logout = async (req: any, res: any, next: any) => {
+export const logout: RequestHandler = async (req, res, next) => {
   try {
     const { auth } = req.cookies;
 
@@ -80,7 +77,7 @@ export const logout = async (req: any, res: any, next: any) => {
         maxAge: 1,
         httpOnly: true,
         secure: true,
-        samesite: 'Lax',
+        sameSite: 'lax',
       });
       return res.status(200).json({ message: 'Logout Successful.' });
     }
