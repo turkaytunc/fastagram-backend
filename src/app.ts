@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { Request, Response, NextFunction } from 'express';
 import morgan from 'morgan';
 import cors from 'cors';
 import helmet from 'helmet';
@@ -25,7 +25,7 @@ app.use(morgan('dev'));
 app.use('/auth', authRoutes);
 app.use('/dashboard', dashboardRoutes);
 
-app.get('/', async (req: any, res: { json: (arg0: { message: string }) => void }) => {
+app.get('/', async (req: Request, res: Response) => {
   if (isInit === false) {
     await initializeDB();
     isInit = true;
@@ -35,19 +35,19 @@ app.get('/', async (req: any, res: { json: (arg0: { message: string }) => void }
 });
 
 // Unhandled Endpoint Error
-app.get('/*', (req: any, res: any, next: any) => {
+app.get('/*', (req, res, next: NextFunction) => {
   const error = new HttpError('Page Not Found', 404);
   return next(error);
 });
 
 // Global Error Handler
-app.use((error: any, req: any, res: any, next: any) => {
-  if (res.headerSent) {
+app.use((error: HttpError, req: Request, res: Response, next: NextFunction) => {
+  if (res.headersSent) {
     return next(error);
   }
 
-  res.status(error.status || 500);
-  return res.json({
+  const status = error.status || 500;
+  return res.status(status).json({
     message: error.message || 'An unexpected error occurred!',
   });
 });
