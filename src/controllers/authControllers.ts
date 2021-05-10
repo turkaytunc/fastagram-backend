@@ -41,16 +41,16 @@ export const login = async (req: any, res: any, next: (arg0: any) => any) => {
 };
 
 export const register = async (
-  req: { body: { name: any; email: any; password: any } },
+  req: { body: { username: any; email: any; password: any } },
   res: any,
   next: (arg0: any) => any
 ) => {
   try {
-    const { name, email, password } = req.body;
+    const { username, email, password } = req.body;
 
     const hashedPassword = await bcrypt.hash(password, 12);
 
-    const user = await createUser(name, email, hashedPassword);
+    const user = await createUser(username, email, hashedPassword);
 
     const token = generateToken(email);
     res.cookie('auth', token, {
