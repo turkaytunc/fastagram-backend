@@ -30,7 +30,7 @@ export const initializeDB = async () => {
     CREATE TABLE IF NOT EXISTS likes (
       id SERIAL PRIMARY KEY,
       photo_id INT NOT NULL REFERENCES photos(id),
-      user_id INT NOT NULL REFERENCES users(id),
+      user_id INT NOT NULL REFERENCES users(id)
     );
     `);
 };
