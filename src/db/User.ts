@@ -1,10 +1,10 @@
 import pool from './pool';
 
-export const createUser = async (name: string, email: string, password: string) => {
+export const createUser = async (username: string, email: string, password: string) => {
   try {
     return await pool.query(
-      'INSERT INTO users(name,email,password) values($1, $2, $3) RETURNING name,user_id,email',
-      [name, email, password]
+      'INSERT INTO users(username,email,password) values($1, $2, $3) RETURNING username,user_id,email',
+      [username, email, password]
     );
   } catch (error) {
     return { rows: [] };
@@ -13,9 +13,7 @@ export const createUser = async (name: string, email: string, password: string) 
 
 export const findUserById = async (userId: string) => {
   try {
-    return await pool.query(`Select user_id, name, email from users where users.user_id = $1`, [
-      userId,
-    ]);
+    return await pool.query(`Select * from users where users.user_id = $1`, [userId]);
   } catch (error) {
     return { rows: [] };
   }

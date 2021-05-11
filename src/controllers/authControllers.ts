@@ -45,6 +45,13 @@ export const register: RequestHandler = async (req, res, next) => {
   try {
     const { username, email, password } = req.body;
 
+    const foundUser = await findUserByEmail(email);
+
+    const isUserExist = foundUser?.rows?.length !== undefined && foundUser?.rows?.length > 0;
+    if (isUserExist) {
+      throw new HttpError('User already exists!', 400);
+    }
+
     const hashedPassword = await bcrypt.hash(password, 12);
 
     const user = await createUser(username, email, hashedPassword);
