@@ -26,11 +26,3 @@ export const findUserByEmail = async (email: string) => {
     return { rows: [] };
   }
 };
-
-export const getUserPhotos = async (userId: string) => {
-  try {
-    return await pool.query(`Select * from photos where user_id = $1`, [userId]);
-  } catch (error) {
-    return { rows: [] };
-  }
-};
