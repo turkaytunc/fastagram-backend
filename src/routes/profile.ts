@@ -4,6 +4,7 @@ import { profileControllers } from '../controllers';
 
 const profile = express.Router();
 
-profile.post('/:userId', validateUser, profileControllers.fetchUserPhotos);
+profile.get('/:userId', validateUser, profileControllers.fetchPhotos);
+profile.post('/addphoto/:userId', validateUser, profileControllers.addPhoto);
 
 export default profile;

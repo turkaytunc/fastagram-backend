@@ -11,13 +11,16 @@ const app = express();
 let isInit = false;
 
 app.use(cookieParser());
-app.use(express.json());
 app.use(
   cors({
-    origin: 'http://localhost:3000',
+    origin: ['http://localhost:3000/', 'http://localhost:3000', '*'],
     credentials: true,
+    methods: 'GET, POST, PUT, DELETE, OPTIONS',
   })
 );
+app.use(express.json());
+app.use(express.text());
+app.use(express.urlencoded());
 
 app.use(helmet());
 app.use(morgan('dev'));
