@@ -4,26 +4,30 @@ import cors from 'cors';
 import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
 import { HttpError } from './utils/HttpError';
-import { authRoutes, dashboardRoutes } from './routes';
+import { authRoutes, dashboardRoutes, profileRoutes } from './routes';
 import { initializeDB } from './db/initializeDB';
 
 const app = express();
 let isInit = false;
 
 app.use(cookieParser());
-app.use(express.json());
 app.use(
   cors({
-    origin: 'http://localhost:3000',
+    origin: ['http://localhost:3000/', 'http://localhost:3000', '*'],
     credentials: true,
+    methods: 'GET, POST, PUT, DELETE, OPTIONS',
   })
 );
+app.use(express.json());
+app.use(express.text());
+app.use(express.urlencoded({ extended: false }));
 
 app.use(helmet());
 app.use(morgan('dev'));
 
 app.use('/auth', authRoutes);
 app.use('/dashboard', dashboardRoutes);
+app.use('/profile', profileRoutes);
 
 app.get('/', async (req: Request, res: Response) => {
   if (isInit === false) {
