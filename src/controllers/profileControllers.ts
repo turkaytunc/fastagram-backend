@@ -8,7 +8,6 @@ export const fetchPhotos: RequestHandler = async (req, res, next) => {
     const { userId } = req.params;
 
     if (userId) {
-      console.log(userId);
       const photos = await getAllPhotos(userId);
       return res.status(200).json({ photos: photos.rows });
     }
