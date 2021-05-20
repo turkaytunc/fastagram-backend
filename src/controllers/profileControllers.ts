@@ -28,6 +28,7 @@ export const addPhoto = async (req: UserRequest, res: Response, next: NextFuncti
     if (!email) {
       throw new HttpError('Oops something went wrong', 400);
     }
+
     const user = await findUserByEmail(email);
     if (!user) {
       throw new HttpError('Oops something went wrong', 400);

@@ -13,11 +13,10 @@ interface UserRequest extends Request {
 
 export const validateUser: RequestHandler = async (req: UserRequest, res, next) => {
   try {
-    const { auth } = req.cookies;
+    const { auth } = req.body;
 
     const token = jwt.verify(auth, secret) as any;
     req.user = token.user;
-
     return next();
   } catch (error) {
     const err = new HttpError('You must provide valid auth token', 403);
