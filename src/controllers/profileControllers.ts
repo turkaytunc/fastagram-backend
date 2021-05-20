@@ -8,7 +8,6 @@ export const fetchPhotos: RequestHandler = async (req, res, next) => {
     const { userId } = req.params;
 
     if (userId) {
-      console.log(userId);
       const photos = await getAllPhotos(userId);
       return res.status(200).json({ photos: photos.rows });
     }
@@ -29,6 +28,7 @@ export const addPhoto = async (req: UserRequest, res: Response, next: NextFuncti
     if (!email) {
       throw new HttpError('Oops something went wrong', 400);
     }
+
     const user = await findUserByEmail(email);
     if (!user) {
       throw new HttpError('Oops something went wrong', 400);
