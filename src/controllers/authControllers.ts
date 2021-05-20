@@ -38,7 +38,7 @@ export const login: RequestHandler = async (req, res, next) => {
 
 export const register: RequestHandler = async (req, res, next) => {
   try {
-    const { username, email, password } = req.body;
+    const { username, fullname, email, password } = req.body;
 
     const foundUser = await findUserByEmail(email);
 
@@ -49,7 +49,7 @@ export const register: RequestHandler = async (req, res, next) => {
 
     const hashedPassword = await bcrypt.hash(password, 12);
 
-    const user = await createUser(username, email, hashedPassword);
+    const user = await createUser(username, fullname, email, hashedPassword);
 
     const token = generateToken(email);
 
