@@ -1,6 +1,7 @@
 import { RequestHandler, Request } from 'express';
 import { HttpError } from '../utils';
 import { findUserByEmail } from '../db/User';
+import { getFeedPhotos } from '../db/Feed';
 
 interface UserRequest extends Request {
   user?: { email: string };
@@ -16,6 +17,19 @@ export const dashboard: RequestHandler = async (req: UserRequest, res, next) => 
     if (user.rows[0]) {
       const { name, email, user_id: userId } = user.rows[0];
       return res.json({ user: { name, email, userId } });
+    }
+
+    throw new HttpError('User not found', 404);
+  } catch (error) {
+    return next(error);
+  }
+};
+
+export const getFeedItems: RequestHandler = async (req: Request, res, next) => {
+  try {
+    const user = await getFeedPhotos();
+    if (user.rows[0]) {
+      return res.json({ feedItems: user.rows });
     }
 
     throw new HttpError('User not found', 404);
