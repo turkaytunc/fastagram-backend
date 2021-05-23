@@ -2,6 +2,7 @@ import { RequestHandler, Request } from 'express';
 import { HttpError } from '../utils';
 import { findUserByEmail } from '../db/User';
 import { getFeedPhotos } from '../db/Feed';
+import Comment from '../db/Comment';
 
 interface UserRequest extends Request {
   user?: { email: string };
@@ -33,6 +34,36 @@ export const getFeedItems: RequestHandler = async (req: Request, res, next) => {
     }
 
     throw new HttpError('User not found', 404);
+  } catch (error) {
+    return next(error);
+  }
+};
+
+export const getComments: RequestHandler = async (req: Request, res, next) => {
+  try {
+    // eslint-disable-next-line camelcase
+    const { photo_id } = req.body;
+    const user = await Comment.getComments(photo_id);
+    if (user.rows[0]) {
+      return res.json({ comments: user.rows });
+    }
+
+    throw new HttpError('No comments found', 404);
+  } catch (error) {
+    return next(error);
+  }
+};
+
+export const addComment: RequestHandler = async (req: Request, res, next) => {
+  try {
+    // eslint-disable-next-line camelcase
+    const { photo_id, user_id, content } = req.body;
+    const comment = await Comment.addComment(photo_id, user_id, content);
+    if (comment.rows[0]) {
+      return res.json({ comment: comment.rows[0] });
+    }
+
+    throw new HttpError("Couldn't add comment", 400);
   } catch (error) {
     return next(error);
   }
