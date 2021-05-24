@@ -2,7 +2,9 @@ import pool from './pool';
 
 export const getAllPhotos = async (userId: string) => {
   try {
-    return await pool.query(`Select * from photos where user_id = $1`, [userId]);
+    return await pool.query(`Select * from photos where user_id = $1 order by created_at desc`, [
+      userId,
+    ]);
   } catch (error) {
     return { rows: [] };
   }
