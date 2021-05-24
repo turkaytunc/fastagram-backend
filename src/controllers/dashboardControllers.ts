@@ -1,8 +1,9 @@
 import { RequestHandler, Request } from 'express';
 import { HttpError } from '../utils';
 import { findUserByEmail } from '../db/User';
-import { getFeedPhotos } from '../db/Feed';
+import Feed from '../db/Feed';
 import Comment from '../db/Comment';
+import Like from '../db/Like';
 
 interface UserRequest extends Request {
   user?: { email: string };
@@ -28,7 +29,7 @@ export const dashboard: RequestHandler = async (req: UserRequest, res, next) => 
 
 export const getFeedItems: RequestHandler = async (req: Request, res, next) => {
   try {
-    const user = await getFeedPhotos();
+    const user = await Feed.getFeedPhotos();
     if (user.rows[0]) {
       return res.json({ feedItems: user.rows });
     }
@@ -64,6 +65,24 @@ export const addComment: RequestHandler = async (req: Request, res, next) => {
     }
 
     throw new HttpError("Couldn't add comment", 400);
+  } catch (error) {
+    return next(error);
+  }
+};
+
+export const addLike: RequestHandler = async (req: Request, res, next) => {
+  try {
+    // eslint-disable-next-line camelcase
+    const { photo_id, user_id } = req.body;
+    const foundLike = await Like.findLike(photo_id, user_id);
+
+    if (foundLike.rows[0]) {
+      return res.json({ addLike: false });
+    }
+
+    const like = await Like.addLike(photo_id, user_id);
+
+    return res.json({ addLike: true });
   } catch (error) {
     return next(error);
   }
