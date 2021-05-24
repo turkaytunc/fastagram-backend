@@ -70,6 +70,21 @@ export const addComment: RequestHandler = async (req: Request, res, next) => {
   }
 };
 
+export const getLikes: RequestHandler = async (req: Request, res, next) => {
+  try {
+    // eslint-disable-next-line camelcase
+    const { photo_id, user_id } = req.body;
+    const likes = await Like.getLikes(photo_id);
+
+    if (likes.rows[0]) {
+      return res.json({ likes: likes.rows[0] });
+    }
+
+    return res.json({ likes: 0 });
+  } catch (error) {
+    return next(error);
+  }
+};
 export const addLike: RequestHandler = async (req: Request, res, next) => {
   try {
     // eslint-disable-next-line camelcase
@@ -80,8 +95,7 @@ export const addLike: RequestHandler = async (req: Request, res, next) => {
       return res.json({ addLike: false });
     }
 
-    const like = await Like.addLike(photo_id, user_id);
-
+    await Like.addLike(photo_id, user_id);
     return res.json({ addLike: true });
   } catch (error) {
     return next(error);
