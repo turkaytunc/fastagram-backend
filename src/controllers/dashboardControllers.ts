@@ -6,7 +6,7 @@ import Comment from '../db/Comment';
 import Like from '../db/Like';
 
 interface UserRequest extends Request {
-  user?: { email: string };
+  user?: { email: string; userId: string };
 }
 
 export const dashboard: RequestHandler = async (req: UserRequest, res, next) => {
@@ -85,30 +85,31 @@ export const getLikes: RequestHandler = async (req: Request, res, next) => {
     return next(error);
   }
 };
-export const addLike: RequestHandler = async (req: Request, res, next) => {
+export const addLike: RequestHandler = async (req: UserRequest, res, next) => {
   try {
     // eslint-disable-next-line camelcase
-    const { photo_id, user_id } = req.body;
+    const { photo_id } = req.body;
 
-    const foundLike = await Like.findLike(photo_id, user_id);
+    const foundLike = await Like.findLike(photo_id, req.user?.userId as string);
+
     if (foundLike.rows[0]) {
-      await Like.removeLike(photo_id, user_id);
+      await Like.removeLike(photo_id, req.user?.userId as string);
       return res.json({ isLiked: false });
     }
 
-    await Like.addLike(photo_id, user_id);
+    await Like.addLike(photo_id, req.user?.userId as string);
     return res.json({ isLiked: true });
   } catch (error) {
     return next(error);
   }
 };
 
-export const isLiked: RequestHandler = async (req: Request, res, next) => {
+export const isLiked: RequestHandler = async (req: UserRequest, res, next) => {
   try {
     // eslint-disable-next-line camelcase
-    const { photo_id, user_id } = req.body;
+    const { photo_id } = req.body;
 
-    const foundLike = await Like.findLike(photo_id, user_id);
+    const foundLike = await Like.findLike(photo_id, req.user?.userId as string);
     if (foundLike.rows[0]) {
       return res.json({ isLiked: true });
     }

@@ -18,7 +18,7 @@ export const login: RequestHandler = async (req, res, next) => {
     }
     const isPasswordValid = await bcrypt.compare(password, user.rows[0].password);
     if (isPasswordValid) {
-      const token = generateToken(email);
+      const token = generateToken(email, user.rows[0].user_id);
 
       return res.status(200).json({
         user: {
@@ -51,7 +51,7 @@ export const register: RequestHandler = async (req, res, next) => {
 
     const user = await createUser(username, fullname, email, hashedPassword);
 
-    const token = generateToken(email);
+    const token = generateToken(email, user.rows[0].user_id);
 
     return res.status(201).json({
       user: {
