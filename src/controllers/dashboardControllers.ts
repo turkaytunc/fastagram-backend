@@ -73,7 +73,7 @@ export const addComment: RequestHandler = async (req: Request, res, next) => {
 export const getLikes: RequestHandler = async (req: Request, res, next) => {
   try {
     // eslint-disable-next-line camelcase
-    const { photo_id, user_id } = req.body;
+    const { photo_id } = req.body;
     const likes = await Like.getLikes(photo_id);
 
     if (likes.rows[0]) {
@@ -89,14 +89,31 @@ export const addLike: RequestHandler = async (req: Request, res, next) => {
   try {
     // eslint-disable-next-line camelcase
     const { photo_id, user_id } = req.body;
-    const foundLike = await Like.findLike(photo_id, user_id);
 
+    const foundLike = await Like.findLike(photo_id, user_id);
     if (foundLike.rows[0]) {
-      return res.json({ addLike: false });
+      await Like.removeLike(photo_id, user_id);
+      return res.json({ isLiked: false });
     }
 
     await Like.addLike(photo_id, user_id);
-    return res.json({ addLike: true });
+    return res.json({ isLiked: true });
+  } catch (error) {
+    return next(error);
+  }
+};
+
+export const isLiked: RequestHandler = async (req: Request, res, next) => {
+  try {
+    // eslint-disable-next-line camelcase
+    const { photo_id, user_id } = req.body;
+
+    const foundLike = await Like.findLike(photo_id, user_id);
+    if (foundLike.rows[0]) {
+      return res.json({ isLiked: true });
+    }
+
+    return res.json({ isLiked: false });
   } catch (error) {
     return next(error);
   }

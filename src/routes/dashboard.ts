@@ -10,5 +10,6 @@ dashboard.post('/comment/add', validateUser, dashboardControllers.addComment);
 dashboard.post('/comments', validateUser, dashboardControllers.getComments);
 dashboard.post('/likes', validateUser, dashboardControllers.getLikes);
 dashboard.post('/like/add', validateUser, dashboardControllers.addLike);
+dashboard.post('/like/isliked', validateUser, dashboardControllers.isLiked);
 
 export default dashboard;

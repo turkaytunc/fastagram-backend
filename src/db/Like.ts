@@ -11,7 +11,18 @@ class Like {
 
   addLike = async (photoId: string, userId: string) => {
     try {
-      return await pool.query(`Insert into likes(photo_id, user_id) values($1, $2)  `, [
+      return await pool.query(`insert into likes(photo_id, user_id) values($1, $2)`, [
+        photoId,
+        userId,
+      ]);
+    } catch (error) {
+      return { rows: [] };
+    }
+  };
+
+  removeLike = async (photoId: string, userId: string) => {
+    try {
+      return await pool.query(`delete from likes where photo_id = $1 and user_id = $2`, [
         photoId,
         userId,
       ]);
