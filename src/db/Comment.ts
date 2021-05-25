@@ -4,7 +4,7 @@ class Comment {
   getComments = async (photoId: string) => {
     try {
       return await pool.query(
-        `Select * from comments where photo_id = $1 order by created_at limit 10`,
+        `Select * from comments where photo_id = $1 order by created_at limit 5`,
         [photoId]
       );
     } catch (error) {
@@ -14,11 +14,10 @@ class Comment {
 
   addComment = async (photoId: string, userId: string, content: string) => {
     try {
-      return await pool.query(`insert into comments(user_id, photo_id, content) values($1,$2,$3)`, [
-        userId,
-        photoId,
-        content,
-      ]);
+      return await pool.query(
+        `insert into comments(user_id, photo_id, content) values($1,$2,$3) Returning *`,
+        [userId, photoId, content]
+      );
     } catch (error) {
       return { rows: [] };
     }
