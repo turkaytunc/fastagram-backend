@@ -55,11 +55,12 @@ export const getComments: RequestHandler = async (req: Request, res, next) => {
   }
 };
 
-export const addComment: RequestHandler = async (req: Request, res, next) => {
+export const addComment: RequestHandler = async (req: UserRequest, res, next) => {
   try {
     // eslint-disable-next-line camelcase
-    const { photo_id, user_id, content } = req.body;
-    const comment = await Comment.addComment(photo_id, user_id, content);
+    const { photo_id, content } = req.body;
+
+    const comment = await Comment.addComment(photo_id, req.user?.userId as string, content);
     if (comment.rows[0]) {
       return res.json({ comment: comment.rows[0] });
     }
