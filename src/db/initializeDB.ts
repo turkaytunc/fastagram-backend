@@ -22,6 +22,7 @@ export const initializeDB = async () => {
       id SERIAL PRIMARY KEY,
       photo_id INT NOT NULL REFERENCES photos(id),
       user_id uuid NOT NULL REFERENCES users(user_id),
+      username VARCHAR(30),
       content VARCHAR(150) NOT NULL,
       created_at DATE DEFAULT CURRENT_DATE
     );

@@ -1,6 +1,6 @@
 import { RequestHandler, Request } from 'express';
 import { HttpError } from '../utils';
-import { findUserByEmail } from '../db/User';
+import { findUserByEmail, findUserById } from '../db/User';
 import Feed from '../db/Feed';
 import Comment from '../db/Comment';
 import Like from '../db/Like';
@@ -44,9 +44,9 @@ export const getComments: RequestHandler = async (req: Request, res, next) => {
   try {
     // eslint-disable-next-line camelcase
     const { photo_id } = req.body;
-    const user = await Comment.getComments(photo_id);
-    if (user.rows[0]) {
-      return res.json({ comments: user.rows });
+    const comments = await Comment.getComments(photo_id);
+    if (comments.rows[0]) {
+      return res.json({ comments: comments.rows });
     }
 
     throw new HttpError('No comments found', 404);
@@ -60,7 +60,10 @@ export const addComment: RequestHandler = async (req: UserRequest, res, next) =>
     // eslint-disable-next-line camelcase
     const { photo_id, content } = req.body;
 
-    const comment = await Comment.addComment(photo_id, req.user?.userId as string, content);
+    const userId = req.user?.userId as string;
+
+    const user = await findUserById(userId);
+    const comment = await Comment.addComment(photo_id, userId, user.rows[0].username, content);
     if (comment.rows[0]) {
       return res.json({ comment: comment.rows[0] });
     }
