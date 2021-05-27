@@ -12,11 +12,11 @@ class Comment {
     }
   };
 
-  addComment = async (photoId: string, userId: string, content: string) => {
+  addComment = async (photoId: string, userId: string, username: string, content: string) => {
     try {
       return await pool.query(
-        `insert into comments(user_id, photo_id, content) values($1,$2,$3) Returning *`,
-        [userId, photoId, content]
+        `insert into comments(user_id, photo_id, username, content) values($1,$2,$3, $4) Returning *`,
+        [userId, photoId, username, content]
       );
     } catch (error) {
       return { rows: [] };
