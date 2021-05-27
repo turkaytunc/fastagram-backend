@@ -27,6 +27,17 @@ export const findUserById = async (userId: string) => {
   }
 };
 
+export const searchUserByUsername = async (username: string) => {
+  try {
+    return await pool.query(
+      `Select user_id, username, fullname, email from users where username ILIKE $1`,
+      [`%${username}%`]
+    );
+  } catch (error) {
+    return { rows: [] };
+  }
+};
+
 export const findUserByEmail = async (email: string) => {
   try {
     return await pool.query(`Select * from users where users.email = $1`, [email]);
