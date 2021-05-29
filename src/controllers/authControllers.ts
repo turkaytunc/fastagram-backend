@@ -65,22 +65,3 @@ export const register: RequestHandler = async (req, res, next) => {
     return next(error);
   }
 };
-
-export const logout: RequestHandler = async (req, res, next) => {
-  try {
-    const { auth } = req.cookies;
-
-    if (auth) {
-      res.cookie('auth', ' ', {
-        maxAge: 1,
-        httpOnly: true,
-        secure: true,
-        sameSite: 'lax',
-      });
-      return res.status(200).json({ message: 'Logout Successful.' });
-    }
-    throw new HttpError('Oops something went wrong', 500);
-  } catch (error) {
-    return next(error);
-  }
-};

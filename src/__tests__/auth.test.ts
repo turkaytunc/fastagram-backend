@@ -1,5 +1,5 @@
 import supertest from 'supertest';
-
+import pool from '../db/pool';
 import app from '../app';
 
 describe('auth', () => {
@@ -10,8 +10,9 @@ describe('auth', () => {
     expect(res2.body.message).toBe('Hello from express!');
   });
 
-  it('should return user', async () => {
-    const res = await supertest(app)
+  it('should return error message because user already exists', async () => {
+    await pool.query('delete from users where username=$1', ['ranusernafhf2']);
+    const res1 = await supertest(app)
       .post('/auth/register')
       .send({
         email: 'fakefdd@gmail.com',
@@ -20,7 +21,32 @@ describe('auth', () => {
         fullname: 'fake smithfd',
       })
       .expect(201);
+    const res = await supertest(app)
+      .post('/auth/register')
+      .send({
+        email: 'fakefdd@gmail.com',
+        password: 'randompass123',
+        username: 'ranusernafhf2',
+        fullname: 'fake smithfd',
+      })
+      .expect(400);
 
-    expect(await res.body).toBe({});
+    expect(await res.body.message).toBe('User already exists!');
+  });
+
+  it('should create and return user', async () => {
+    await pool.query('delete from users where username=$1', ['fakeusernafhf2']);
+    const res = await supertest(app)
+      .post('/auth/register')
+      .send({
+        email: 'fakeuser@gmail.com',
+        password: 'randomfpass123',
+        username: 'fakeusernafhf2',
+        fullname: 'mr fake smithfd',
+      })
+      .expect(201);
+
+    expect(await res.body.user.email).toBe('fakeuser@gmail.com');
+    expect(await res.body.user).toHaveProperty('userId');
   });
 });

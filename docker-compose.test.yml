@@ -1,0 +1,12 @@
+version: '3'
+services:
+  postgresdb:
+    image: postgres:13.2
+    env_file:
+      - ./.env
+    volumes:
+      - pg-vol:/data/postgresdb
+    ports:
+      - 5432:5432
+volumes:
+  pg-vol:
