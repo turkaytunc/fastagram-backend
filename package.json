@@ -11,7 +11,8 @@
     "build": "tsc -p .",
     "dev": "nodemon -L server.ts",
     "compose:dev:up": "docker-compose -f docker-compose.dev.yml up",
-    "compose:dev:test": "docker-compose -f docker-compose.dev.yml up postgresdb",
+    "compose:test:up": "docker-compose -f docker-compose.test.yml up --build",
+    "compose:test:down": "docker-compose -f docker-compose.test.yml down -v",
     "compose:dev:down": "docker-compose -f docker-compose.dev.yml down -v",
     "compose:prod:up": "docker-compose -f docker-compose.prod.yml up --build --force-recreate -d",
     "compose:prod:down": "docker-compose -f docker-compose.prod.yml down"
@@ -75,6 +76,12 @@
     ],
     "coveragePathIgnorePatterns": [
       "node_modules"
+    ],
+    "coverageReporters": [
+      "html",
+      "lcov",
+      "json",
+      "text"
     ],
     "testEnvironment": "node",
     "coverageThreshold": {
