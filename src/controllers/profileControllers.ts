@@ -1,14 +1,14 @@
 import { NextFunction, Request, RequestHandler, Response } from 'express';
 import { HttpError } from '../utils';
-import { getAllPhotos, addPhotoByUserId } from '../db/Photo';
-import { findUserByEmail, findUserById } from '../db/User';
+import Photo from '../db/Photo';
+import User from '../db/User';
 
 export const getPhotos: RequestHandler = async (req, res, next) => {
   try {
     const { userId } = req.params;
 
     if (userId) {
-      const photos = await getAllPhotos(userId);
+      const photos = await Photo.getAllPhotos(userId);
       return res.status(200).json({ photos: photos.rows });
     }
     throw new HttpError('Oops something went wrong', 400);
@@ -29,11 +29,11 @@ export const addPhoto = async (req: UserRequest, res: Response, next: NextFuncti
       throw new HttpError('Oops something went wrong', 400);
     }
 
-    const user = await findUserByEmail(email);
+    const user = await User.findUserByEmail(email);
     if (!user) {
       throw new HttpError('Oops something went wrong', 400);
     }
-    const photos = await addPhotoByUserId(user.rows[0].user_id, photoData);
+    const photos = await Photo.addPhotoByUserId(user.rows[0].user_id, photoData);
     return res.status(200).json({ photo: photos.rows[0] });
   } catch (error) {
     return next(error);
@@ -49,7 +49,7 @@ export const getProfile = async (req: UserRequest, res: Response, next: NextFunc
       throw new HttpError('Oops something went wrong', 400);
     }
 
-    const user = await findUserById(userId);
+    const user = await User.findUserById(userId);
     if (!user) {
       throw new HttpError('Oops something went wrong', 400);
     }

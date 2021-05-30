@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { searchUserByUsername } from '../db/User';
+import User from '../db/User';
 import { HttpError } from '../utils';
 
 export const findUser = async (req: Request, res: Response, next: NextFunction) => {
@@ -10,7 +10,7 @@ export const findUser = async (req: Request, res: Response, next: NextFunction) 
       throw new HttpError('Please provide valid username ', 400);
     }
 
-    const users = await searchUserByUsername(username as string);
+    const users = await User.searchUserByUsername(username as string);
     if (!users.rows[0]) {
       throw new HttpError('Oops something went wrong', 404);
     }

@@ -1,6 +1,6 @@
 import { RequestHandler, Request } from 'express';
 import { HttpError } from '../utils';
-import { findUserByEmail, findUserById } from '../db/User';
+import User from '../db/User';
 import Feed from '../db/Feed';
 import Comment from '../db/Comment';
 import Like from '../db/Like';
@@ -15,7 +15,7 @@ export const dashboard: RequestHandler = async (req: UserRequest, res, next) => 
       throw new HttpError('User not found', 404);
     }
 
-    const user = await findUserByEmail(req?.user?.email);
+    const user = await User.findUserByEmail(req?.user?.email);
     if (user.rows[0]) {
       const { name, email, user_id: userId } = user.rows[0];
       return res.json({ user: { name, email, userId } });
@@ -62,7 +62,7 @@ export const addComment: RequestHandler = async (req: UserRequest, res, next) =>
 
     const userId = req.user?.userId as string;
 
-    const user = await findUserById(userId);
+    const user = await User.findUserById(userId);
     const comment = await Comment.addComment(photo_id, userId, user.rows[0].username, content);
     if (comment.rows[0]) {
       return res.json({ comment: comment.rows[0] });
