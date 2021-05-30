@@ -3,14 +3,14 @@ import bcrypt from 'bcrypt';
 import { RequestHandler } from 'express';
 
 import { generateToken, HttpError } from '../utils';
-import { createUser, findUserByEmail } from '../db/User';
+import User from '../db/User';
 
 dotenv.config();
 
 export const login: RequestHandler = async (req, res, next) => {
   try {
     const { email, password } = req.body;
-    const user = await findUserByEmail(email);
+    const user = await User.findUserByEmail(email);
 
     const isUserExist = user?.rows?.length !== undefined && user?.rows?.length > 0;
     if (!isUserExist) {
@@ -40,7 +40,7 @@ export const register: RequestHandler = async (req, res, next) => {
   try {
     const { username, fullname, email, password } = req.body;
 
-    const foundUser = await findUserByEmail(email);
+    const foundUser = await User.findUserByEmail(email);
 
     const isUserExist = foundUser?.rows?.length !== undefined && foundUser?.rows?.length > 0;
     if (isUserExist) {
@@ -49,7 +49,7 @@ export const register: RequestHandler = async (req, res, next) => {
 
     const hashedPassword = await bcrypt.hash(password, 12);
 
-    const user = await createUser(username, fullname, email, hashedPassword);
+    const user = await User.createUser(username, fullname, email, hashedPassword);
 
     const token = generateToken(email, user.rows[0].user_id);
 
@@ -61,25 +61,6 @@ export const register: RequestHandler = async (req, res, next) => {
       },
       token,
     });
-  } catch (error) {
-    return next(error);
-  }
-};
-
-export const logout: RequestHandler = async (req, res, next) => {
-  try {
-    const { auth } = req.cookies;
-
-    if (auth) {
-      res.cookie('auth', ' ', {
-        maxAge: 1,
-        httpOnly: true,
-        secure: true,
-        sameSite: 'lax',
-      });
-      return res.status(200).json({ message: 'Logout Successful.' });
-    }
-    throw new HttpError('Oops something went wrong', 500);
   } catch (error) {
     return next(error);
   }

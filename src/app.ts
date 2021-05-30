@@ -30,13 +30,17 @@ app.use('/dashboard', dashboardRoutes);
 app.use('/profile', profileRoutes);
 app.use('/search', searchRoutes);
 
-app.get('/', async (req: Request, res: Response) => {
-  if (isInit === false) {
-    await initializeDB();
-    isInit = true;
-    return res.json({ message: 'Initial configuration completed successfully!' });
+app.get('/', async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    if (isInit === false) {
+      await initializeDB();
+      isInit = true;
+      return res.json({ message: 'Initial configuration completed successfully!' });
+    }
+    return res.json({ message: 'Hello from express!' });
+  } catch (error) {
+    return next(error);
   }
-  return res.json({ message: 'Hello from express!' });
 });
 
 // Unhandled Endpoint Error
