@@ -75,7 +75,8 @@
       "src/**/*.(ts|tsx)"
     ],
     "coveragePathIgnorePatterns": [
-      "node_modules"
+      "node_modules",
+      "db"
     ],
     "coverageReporters": [
       "html",

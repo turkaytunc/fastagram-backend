@@ -34,7 +34,7 @@ export const getFeedItems: RequestHandler = async (req: Request, res, next) => {
       return res.json({ feedItems: user.rows });
     }
 
-    throw new HttpError('User not found', 404);
+    throw new HttpError('No photos found', 404);
   } catch (error) {
     return next(error);
   }
