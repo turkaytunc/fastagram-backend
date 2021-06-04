@@ -3,3 +3,4 @@ export * as dashboardC from './dashboardC';
 export * as profileC from './profileC';
 export * as searchC from './searchC';
 export * as likeC from './likeC';
+export * as commentC from './commentC';
