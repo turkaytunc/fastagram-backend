@@ -1,9 +1,9 @@
 import express from 'express';
-import { authControllers } from '../controllers';
+import { authC } from '../controllers';
 
 const auth = express.Router();
 
-auth.post('/register', authControllers.register);
-auth.post('/login', authControllers.login);
+auth.post('/register', authC.register);
+auth.post('/login', authC.login);
 
 export default auth;

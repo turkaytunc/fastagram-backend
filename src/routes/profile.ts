@@ -1,11 +1,11 @@
 import express from 'express';
 import { validateUser } from '../middlewares';
-import { profileControllers } from '../controllers';
+import { profileC } from '../controllers';
 
 const profile = express.Router();
 
-profile.post('/photos/:userId', validateUser, profileControllers.getPhotos);
-profile.post('/addphoto/', validateUser, profileControllers.addPhoto);
-profile.post('/', validateUser, profileControllers.getProfile);
+profile.post('/photos/:userId', validateUser, profileC.getPhotos);
+profile.post('/addphoto/', validateUser, profileC.addPhoto);
+profile.post('/', validateUser, profileC.getProfile);
 
 export default profile;

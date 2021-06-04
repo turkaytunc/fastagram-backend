@@ -17,6 +17,7 @@ import {
 
 const app = express();
 
+// middlewares
 app.use(cookieParser());
 app.use(
   cors({
@@ -28,10 +29,10 @@ app.use(
 app.use(express.json());
 app.use(express.text());
 app.use(express.urlencoded({ extended: false }));
-
 app.use(helmet());
 app.use(morgan('dev'));
 
+// routes
 app.use('/auth', authRoute);
 app.use('/dashboard', dashboardRoute);
 app.use('/comment', commentRoute);
