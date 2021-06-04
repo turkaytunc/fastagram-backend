@@ -1,4 +1,6 @@
-export { default as authRoutes } from './auth';
-export { default as dashboardRoutes } from './dashboard';
-export { default as profileRoutes } from './profile';
-export { default as searchRoutes } from './search';
+export { default as authRoute } from './auth';
+export { default as dashboardRoute } from './dashboard';
+export { default as profileRoute } from './profile';
+export { default as searchRoute } from './search';
+export { default as commentRoute } from './comment';
+export { default as likeRoute } from './like';

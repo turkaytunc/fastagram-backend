@@ -11,7 +11,6 @@ const { POSTGRES_HOST, POSTGRES_PASSWORD, POSTGRES_USER, POSTGRES_DB, POSTGRES_P
 //   port: (POSTGRES_PORT as unknown) as number,
 //   database: POSTGRES_DB,
 //   host: POSTGRES_HOST,
-//   max: 50,
 // });
 
 const pool = new pg.Pool({
