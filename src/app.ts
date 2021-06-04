@@ -3,19 +3,19 @@ import morgan from 'morgan';
 import cors from 'cors';
 import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
-import { HttpError } from './utils/HttpError';
 import {
   authRoute,
   commentRoute,
   dashboardRoute,
+  error404,
+  globalError,
+  init,
   likeRoute,
   profileRoute,
   searchRoute,
 } from './routes';
-import { initializeDB } from './db/initializeDB';
 
 const app = express();
-let isInit = false;
 
 app.use(cookieParser());
 app.use(
@@ -39,35 +39,12 @@ app.use('/profile', profileRoute);
 app.use('/search', searchRoute);
 app.use('/like', likeRoute);
 
-app.get('/', async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    if (isInit === false) {
-      await initializeDB();
-      isInit = true;
-      return res.json({ message: 'Initial configuration completed successfully!' });
-    }
-    return res.json({ message: 'Hello from express!' });
-  } catch (error) {
-    return next(error);
-  }
-});
+app.get('/', init);
 
 // Unhandled Endpoint Error
-app.get('/*', (req, res, next: NextFunction) => {
-  const error = new HttpError('Page Not Found', 404);
-  return next(error);
-});
+app.use('/*', error404);
 
 // Global Error Handler
-app.use((error: HttpError, req: Request, res: Response, next: NextFunction) => {
-  if (res.headersSent) {
-    return next(error);
-  }
-
-  const status = error.status || 500;
-  return res.status(status).json({
-    message: error.message || 'An unexpected error occurred!',
-  });
-});
+app.use(globalError);
 
 export default app;
