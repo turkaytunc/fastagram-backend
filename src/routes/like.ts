@@ -1,11 +1,11 @@
 import express from 'express';
-import { dashboardControllers } from '../controllers';
+import { likeControllers } from '../controllers';
 import { validateUser } from '../middlewares';
 
 const like = express.Router();
 
-like.post('/all', validateUser, dashboardControllers.getLikes);
-like.post('/add', validateUser, dashboardControllers.addLike);
-like.post('/isliked', validateUser, dashboardControllers.isLiked);
+like.post('/all', validateUser, likeControllers.getLikes);
+like.post('/add', validateUser, likeControllers.addLike);
+like.post('/isliked', validateUser, likeControllers.isLiked);
 
 export default like;
