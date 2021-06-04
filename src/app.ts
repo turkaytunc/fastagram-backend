@@ -4,7 +4,14 @@ import cors from 'cors';
 import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
 import { HttpError } from './utils/HttpError';
-import { authRoutes, dashboardRoutes, profileRoutes, searchRoutes } from './routes';
+import {
+  authRoute,
+  commentRoute,
+  dashboardRoute,
+  likeRoute,
+  profileRoute,
+  searchRoute,
+} from './routes';
 import { initializeDB } from './db/initializeDB';
 
 const app = express();
@@ -25,10 +32,12 @@ app.use(express.urlencoded({ extended: false }));
 app.use(helmet());
 app.use(morgan('dev'));
 
-app.use('/auth', authRoutes);
-app.use('/dashboard', dashboardRoutes);
-app.use('/profile', profileRoutes);
-app.use('/search', searchRoutes);
+app.use('/auth', authRoute);
+app.use('/dashboard', dashboardRoute);
+app.use('/comment', commentRoute);
+app.use('/profile', profileRoute);
+app.use('/search', searchRoute);
+app.use('/like', likeRoute);
 
 app.get('/', async (req: Request, res: Response, next: NextFunction) => {
   try {
