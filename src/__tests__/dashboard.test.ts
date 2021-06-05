@@ -2,6 +2,28 @@ import supertest from 'supertest';
 import app from '../app';
 import pool from '../db/pool';
 
+let dashToken: string;
+let user: { userId: string; email: string };
+
+beforeEach(async () => {
+  const res = await supertest(app)
+    .post('/auth/register')
+    .send({
+      email: 'dashuserr@gmail.com',
+      password: 'randomfps123',
+      username: 'dashusehf2',
+      fullname: 'mr fakmithfd',
+    })
+    .expect(201);
+
+  user = res.body.user;
+  dashToken = res.body.token;
+});
+
+afterEach(async () => {
+  await pool.query('delete from users where username=$1', ['dashusehf2']);
+});
+
 describe('/dashboard', () => {
   it('should search user with credentials included in jwt and cant find any user', async () => {
     const response = await supertest(app)
@@ -23,51 +45,25 @@ describe('/dashboard', () => {
     expect(await response.body.message).toBe('You must provide valid auth token');
   });
 
-  it('should get error because jwt not provided', async () => {
-    await pool.query('delete from users where username=$1', ['fakeusernafhf2']);
-    const res = await supertest(app)
-      .post('/auth/register')
-      .send({
-        email: 'fakeuser@gmail.com',
-        password: 'randomfpass123',
-        username: 'fakeusernafhf2',
-        fullname: 'mr fake smithfd',
-      })
-      .expect(201);
-
-    const token = res.body.token!;
-
+  it('should find user and return it', async () => {
     const response = await supertest(app)
       .post('/dashboard')
       .send({
-        auth: token,
+        auth: dashToken,
       })
       .expect(200);
 
     expect(await response.body).toHaveProperty('user');
     expect(await response.body.user).toHaveProperty('userId');
-    expect(await response.body.user.email).toBe('fakeuser@gmail.com');
+    expect(await response.body.user.email).toBe('dashuserr@gmail.com');
   });
 
   describe('/feed', () => {
     it('should get error because jwt not provided', async () => {
-      await pool.query('delete from users where username=$1', ['fakeusernafhf2']);
-      const res = await supertest(app)
-        .post('/auth/register')
-        .send({
-          email: 'fakeuser@gmail.com',
-          password: 'randomfpass123',
-          username: 'fakeusernafhf2',
-          fullname: 'mr fake smithfd',
-        })
-        .expect(201);
-
-      const token = res.body.token!;
-
       const response = await supertest(app)
         .post('/dashboard/feed')
         .send({
-          auth: token,
+          auth: dashToken,
         })
         .expect(404);
 

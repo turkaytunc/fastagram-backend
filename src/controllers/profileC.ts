@@ -23,14 +23,11 @@ interface UserRequest extends Request {
 
 export const addPhoto = async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
-    const email = req?.user?.email;
     const { photoData } = req.body;
-    if (!email) {
-      throw new HttpError('Oops something went wrong', 400);
-    }
 
-    const user = await User.findUserByEmail(email);
-    if (!user) {
+    const email = req?.user?.email;
+    const user = await User.findUserByEmail(email as string);
+    if (!user.rows[0]) {
       throw new HttpError('Oops something went wrong', 400);
     }
     const photos = await Photo.addPhotoByUserId(user.rows[0].user_id, photoData);
@@ -44,14 +41,9 @@ export const getProfile = async (req: UserRequest, res: Response, next: NextFunc
   try {
     const { userId } = req.body;
 
-    const email = req?.user?.email;
-    if (!email) {
-      throw new HttpError('Oops something went wrong', 400);
-    }
-
     const user = await User.findUserById(userId);
-    if (!user) {
-      throw new HttpError('Oops something went wrong', 400);
+    if (!user.rows[0]) {
+      throw new HttpError('User not found', 400);
     }
 
     return res.status(200).json({ profile: user.rows[0] });
