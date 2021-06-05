@@ -1,8 +1,8 @@
 import express from 'express';
-import { searchControllers } from '../controllers';
+import { searchC } from '../controllers';
 
 const search = express.Router();
 
-search.get('/', searchControllers.findUser);
+search.get('/', searchC.findUser);
 
 export default search;

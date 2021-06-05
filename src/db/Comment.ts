@@ -1,6 +1,14 @@
+/* eslint-disable no-empty-function */
+/* eslint-disable no-useless-constructor */
 import pool from './pool';
 
 class Comment {
+  private static readonly instance = new Comment();
+
+  private constructor() {}
+
+  static getInstance = () => Comment.instance;
+
   getComments = async (photoId: string) => {
     try {
       return await pool.query(
@@ -24,4 +32,4 @@ class Comment {
   };
 }
 
-export default new Comment();
+export default Comment.getInstance();

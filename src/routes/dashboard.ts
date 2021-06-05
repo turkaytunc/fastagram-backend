@@ -1,10 +1,10 @@
 import express from 'express';
 import { validateUser } from '../middlewares';
-import { dashboardControllers } from '../controllers';
+import { dashboardC } from '../controllers';
 
 const dashboard = express.Router();
 
-dashboard.post('/', validateUser, dashboardControllers.dashboard);
-dashboard.post('/feed', validateUser, dashboardControllers.getFeedItems);
+dashboard.post('/', validateUser, dashboardC.dashboard);
+dashboard.post('/feed', validateUser, dashboardC.getFeedItems);
 
 export default dashboard;
