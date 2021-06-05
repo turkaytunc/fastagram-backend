@@ -1,6 +1,14 @@
+/* eslint-disable no-empty-function */
+/* eslint-disable no-useless-constructor */
 import pool from './pool';
 
 class User {
+  private static readonly instance = new User();
+
+  private constructor() {}
+
+  static getInstance = () => User.instance;
+
   createUser = async (username: string, fullname: string, email: string, password: string) => {
     try {
       return await pool.query(
@@ -43,4 +51,4 @@ class User {
   };
 }
 
-export default new User();
+export default User.getInstance();
